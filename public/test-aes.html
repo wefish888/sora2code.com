@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AES Key Test</title>
+</head>
+<body>
+    <h1>AES Key Generation Test</h1>
+    <button onclick="testKey()">Test Key Generation</button>
+    <pre id="output"></pre>
+
+    <script>
+        function bufferToBase64(buffer) {
+            let binary = '';
+            for (let i = 0; i < buffer.length; i++) {
+                binary += String.fromCharCode(buffer[i]);
+            }
+            return btoa(binary);
+        }
+
+        function base64ToBuffer(base64) {
+            const binaryString = atob(base64);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes;
+        }
+
+        function testKey() {
+            const output = document.getElementById('output');
+
+            // Generate 32-byte key
+            const keyBytes = crypto.getRandomValues(new Uint8Array(32));
+            console.log('Generated key bytes:', keyBytes.length);
+
+            // Convert to base64
+            const keyBase64 = bufferToBase64(keyBytes);
+            console.log('Base64 key:', keyBase64);
+            console.log('Base64 length:', keyBase64.length);
+
+            // Verify by decoding
+            const decoded = base64ToBuffer(keyBase64);
+            console.log('Decoded length:', decoded.length);
+
+            output.textContent = `
+Original bytes: ${keyBytes.length}
+Base64 string: ${keyBase64}
+Base64 length: ${keyBase64.length}
+Decoded bytes: ${decoded.length}
+Match: ${keyBytes.length === decoded.length ? 'YES' : 'NO'}
+
+Test sending to API...
+`;
+
+            // Test API call
+            fetch('https://api.sora2code.com/api/v1/codes?limit=1', {
+                headers: {
+                    'X-AES-Key': keyBase64
+                }
+            })
+            .then(r => r.json())
+            .then(data => {
+                output.textContent += `\nAPI Response:\n${JSON.stringify(data, null, 2)}`;
+            })
+            .catch(err => {
+                output.textContent += `\nError: ${err.message}`;
+            });
+        }
+    </script>
+</body>
+</html>

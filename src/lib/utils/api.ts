@@ -118,19 +118,29 @@ export async function apiRequest<T = any>(
 
   let requestBody: string | undefined;
 
-  // 如果不跳过加密，添加 RSA 加密的 AES 密钥
+  // 如果不跳过加密，添加 AES 密钥到请求头
+  // 注意：Cloudflare Workers部署时直接发送base64编码的AES密钥（通过HTTPS保护）
+  // 如果需要RSA加密，可以在非Workers环境中启用
   if (!skipEncryption) {
-    // 确保已获取 RSA 公钥
-    if (!rsaCrypto.hasPublicKey()) {
-      console.log('[API] Fetching RSA public key...');
-      await rsaCrypto.fetchPublicKey(apiBaseUrl);
-    }
-
     const aesKey = keyManager.getKey();
-    // 使用 RSA 公钥加密 AES 密钥
-    const encryptedAesKey = rsaCrypto.encrypt(aesKey);
-    requestHeaders['X-AES-Key'] = encryptedAesKey;
-    console.log('[API] Added encrypted AES key to request headers');
+
+    // 检测是否为Cloudflare Workers环境（通过API URL判断）
+    const isCloudflareWorkers = apiBaseUrl.includes('sora2code.com');
+
+    if (isCloudflareWorkers) {
+      // Cloudflare Workers: 直接发送base64密钥（HTTPS保护）
+      requestHeaders['X-AES-Key'] = aesKey;
+      console.log('[API] Added AES key to request headers (Cloudflare Workers mode)');
+    } else {
+      // 传统服务器: 使用RSA加密AES密钥
+      if (!rsaCrypto.hasPublicKey()) {
+        console.log('[API] Fetching RSA public key...');
+        await rsaCrypto.fetchPublicKey(apiBaseUrl);
+      }
+      const encryptedAesKey = rsaCrypto.encrypt(aesKey);
+      requestHeaders['X-AES-Key'] = encryptedAesKey;
+      console.log('[API] Added encrypted AES key to request headers (Express mode)');
+    }
   }
 
   // 准备请求体
