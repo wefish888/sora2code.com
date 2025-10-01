@@ -1,0 +1,272 @@
+---
+import '../../styles/global.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title,
+  description = "Sora2Code.com - Latest Sora invite codes, real-time updates from Reddit & Twitter, get OpenAI Sora2 Access",
+  image = "/og-image.jpg"
+} = Astro.props;
+
+// Safe URL construction for canonical URL
+let canonicalURL: URL;
+try {
+  if (Astro.site) {
+    canonicalURL = new URL(Astro.url.pathname, Astro.site);
+  } else {
+    canonicalURL = new URL(Astro.url.pathname, 'http://localhost:4321');
+  }
+} catch (error) {
+  // Fallback to localhost if URL construction fails
+  canonicalURL = new URL('/', 'http://localhost:4321');
+}
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO Meta Tags -->
+    <title>{title}</title>
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.url)} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL(image, Astro.url)} />
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin />
+
+    <!-- Theme Detection Script -->
+    <script is:inline>
+      // Prevent flash theme detection
+      (function() {
+        const theme = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.classList.toggle('dark', theme === 'dark');
+      })();
+    </script>
+
+    <!-- Microsoft Clarity -->
+    <!-- <script is:inline type="text/javascript">
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "tif2a39hsf");
+    </script> -->
+
+    <!-- Google Analytics -->
+    <!-- <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-4GP9NT0783"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-4GP9NT0783');
+    </script> -->
+  </head>
+
+  <body class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div class="flex flex-col min-h-screen">
+      <!-- Navigation bar -->
+      <header class="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex justify-between items-center h-16">
+            <!-- Logo -->
+            <div class="flex items-center">
+              <a href="/" class="flex items-center space-x-2">
+                <svg class="h-8 w-8 text-primary-600" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8 14H9.5v-2h1.5v2zm0-3H9.5V9h1.5v5zm5 3H14.5v-2h1.5v2zm0-3H14.5V9h1.5v5z"/>
+                </svg>
+                <span class="text-xl font-bold text-gray-900 dark:text-white">Sora2Code</span>
+              </a>
+            </div>
+
+            <!-- Desktop Navigation links -->
+            <div class="hidden md:flex items-center space-x-8">
+              <a href="/" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                Home
+              </a>
+              <a href="/blog" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                Blog
+              </a>
+              <a href="/guide" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                Guides
+              </a>
+              <a href="/about" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                About
+              </a>
+            </div>
+
+            <!-- Theme toggle and mobile menu button -->
+            <div class="flex items-center space-x-2">
+              <!-- Theme toggle button -->
+              <button
+                id="theme-toggle"
+                class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                aria-label="Toggle theme"
+              >
+                <svg class="h-5 w-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path class="sun" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                  <path class="moon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" style="display: none;"></path>
+                </svg>
+              </button>
+
+              <!-- Mobile menu button -->
+              <button
+                id="mobile-menu-button"
+                class="md:hidden p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                aria-label="Toggle mobile menu"
+              >
+                <svg class="h-6 w-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path class="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                  <path class="close-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" style="display: none;"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Mobile menu -->
+          <div id="mobile-menu" class="hidden md:hidden pb-4">
+            <div class="flex flex-col space-y-2">
+              <a href="/" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                Home
+              </a>
+              <a href="/blog" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                Blog
+              </a>
+              <a href="/guide" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                Guides
+              </a>
+              <a href="/about" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                About
+              </a>
+            </div>
+          </div>
+        </nav>
+      </header>
+
+      <!-- Main content -->
+      <main class="flex-1">
+        <slot />
+      </main>
+
+      <!-- Footer -->
+      <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Sora2Code</h3>
+              <p class="text-gray-600 dark:text-gray-400 text-sm">
+Providing the latest and most accurate Sora invite codes to help you gain access to OpenAI's video generation platform.
+              </p>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Links</h3>
+              <ul class="space-y-2 text-sm">
+                <li><a href="/blog" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">Sora Guides</a></li>
+                <li><a href="/guide" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">How to Use</a></li>
+                <li><a href="/faq" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">FAQ</a></li>
+                <li><a href="/terms" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">Terms of Service</a></li>
+                <li><a href="/privacy" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">Privacy Policy</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Contact Us</h3>
+              <ul class="space-y-2 text-sm">
+                <li><a href="mailto:support@sora2code.com" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">Email</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <p class="text-center text-sm text-gray-600 dark:text-gray-400">
+              © 2024 Sora2Code.com. This site is not affiliated with OpenAI. Sora is a trademark of OpenAI.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Theme toggle and mobile menu script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        const sunIcon = themeToggle?.querySelector('.sun');
+        const moonIcon = themeToggle?.querySelector('.moon');
+
+        function updateThemeIcon(isDark: boolean) {
+          if (sunIcon && moonIcon) {
+            if (isDark) {
+              (sunIcon as HTMLElement).style.display = 'none';
+              (moonIcon as HTMLElement).style.display = 'block';
+            } else {
+              (sunIcon as HTMLElement).style.display = 'block';
+              (moonIcon as HTMLElement).style.display = 'none';
+            }
+          }
+        }
+
+        // Initialize theme icons
+        updateThemeIcon(html.classList.contains('dark'));
+
+        themeToggle?.addEventListener('click', function() {
+          const isDark = html.classList.toggle('dark');
+          localStorage.setItem('theme', isDark ? 'dark' : 'light');
+          updateThemeIcon(isDark);
+        });
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = mobileMenuButton?.querySelector('.menu-icon');
+        const closeIcon = mobileMenuButton?.querySelector('.close-icon');
+
+        mobileMenuButton?.addEventListener('click', function() {
+          const isHidden = mobileMenu?.classList.contains('hidden');
+
+          if (isHidden) {
+            mobileMenu?.classList.remove('hidden');
+            (menuIcon as HTMLElement).style.display = 'none';
+            (closeIcon as HTMLElement).style.display = 'block';
+          } else {
+            mobileMenu?.classList.add('hidden');
+            (menuIcon as HTMLElement).style.display = 'block';
+            (closeIcon as HTMLElement).style.display = 'none';
+          }
+        });
+
+        // Close mobile menu when clicking a link
+        const mobileMenuLinks = mobileMenu?.querySelectorAll('a');
+        mobileMenuLinks?.forEach(link => {
+          link.addEventListener('click', function() {
+            mobileMenu?.classList.add('hidden');
+            (menuIcon as HTMLElement).style.display = 'block';
+            (closeIcon as HTMLElement).style.display = 'none';
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

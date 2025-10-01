@@ -1,0 +1,59 @@
+name = "sora2code-backend"
+main = "src/worker.ts"
+compatibility_date = "2024-01-15"
+compatibility_flags = ["nodejs_compat"]
+
+# Development environment (default)
+[vars]
+NODE_ENV = "development"
+ALLOWED_ORIGINS = "http://localhost:4321,http://localhost:3000,http://localhost:8787"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "sora2code-dev"
+database_id = "local"
+
+[[kv_namespaces]]
+binding = "CACHE"
+id = "local"
+
+# Environment variables (add your actual values)
+[env.production.vars]
+NODE_ENV = "production"
+ALLOWED_ORIGINS = "https://sora2code.com,https://www.sora2code.com"
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "sora2code-prod"
+database_id = "ea0b3a7c-4027-4d47-8ad1-3e208df0d12a"
+
+[[env.production.kv_namespaces]]
+binding = "CACHE"
+id = "e091dcbabe0b4d8bab84c9930638fb66"
+
+[env.staging.vars]
+NODE_ENV = "staging"
+ALLOWED_ORIGINS = "https://staging.sora2code.com,http://localhost:4321,http://localhost:3000"
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "sora2code-staging"
+database_id = "7dd6f5d5-1da6-4998-b39a-6c6c14df4cca"
+
+[[env.staging.kv_namespaces]]
+binding = "CACHE"
+id = "dbc1d31e322b45048f760127388d6595"
+
+# R2 bucket for file storage (if needed)
+# [[r2_buckets]]
+# binding = "STORAGE"
+# bucket_name = "sora2code-storage"
+
+# Durable Objects for real-time features (if needed)
+# [[durable_objects.bindings]]
+# name = "REALTIME_HANDLER"
+# class_name = "RealtimeHandler"
+
+# Cron triggers for scheduled tasks
+[triggers]
+crons = ["*/10 * * * *"]  # Every 10 minutes - code collection

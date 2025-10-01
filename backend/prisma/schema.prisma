@@ -1,0 +1,196 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// 用户表
+model User {
+  id                 String    @id @default(cuid())
+  email              String    @unique
+  username           String?   @unique
+  password           String
+  bio                String?
+  avatar             String?
+  role               String    @default("user") // user, admin, super_admin
+  isVerified         Boolean   @default(false)
+  isActive           Boolean   @default(true)
+  isPremium          Boolean   @default(false)
+  premiumExpiresAt   DateTime?
+  preferences        String    @default("{}") // JSON string
+  verificationToken  String?
+  passwordResetToken String?
+  passwordResetExpires DateTime?
+  emailVerifiedAt    DateTime?
+  registrationIp     String?
+  lastLoginAt        DateTime?
+  lastLoginIp        String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  // 关联关系
+  favorites        Favorite[]
+  codeEvents       CodeEvent[]
+  reports          CodeReport[]
+  activities       UserActivity[]
+  createdCodes     ShiftCode[] @relation("CreatedBy")
+  updatedCodes     ShiftCode[] @relation("UpdatedBy")
+
+  @@map("users")
+}
+
+// Shift 代码表
+model ShiftCode {
+  id                String    @id @default(cuid())
+  code              String    @unique
+  rewardDescription String?
+  status            String    @default("active") // active, expired, pending
+  expiresAt         DateTime?
+  sourceUrl         String?
+  sourceId          String?   // Reddit/Twitter post ID
+  sourceType        String    @default("reddit") // reddit, twitter, manual
+  notes             String?
+  copyCount         Int       @default(0)
+  upvoteCount       Int       @default(0)  // 点赞数
+  downvoteCount     Int       @default(0)  // 踩数
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  createdById       String?   // 创建者ID
+  updatedById       String?   // 最后更新者ID
+
+  // 关联关系
+  platforms    CodePlatform[]
+  favorites    Favorite[]
+  copyEvents   CodeEvent[]
+  reports      CodeReport[]
+  votes        CodeVote[]     // 投票记录
+  createdBy    User?          @relation("CreatedBy", fields: [createdById], references: [id])
+  updatedBy    User?          @relation("UpdatedBy", fields: [updatedById], references: [id])
+
+  @@map("shift_codes")
+}
+
+// 代码平台关联表
+model CodePlatform {
+  id        String    @id @default(cuid())
+  codeId    String
+  platform  String    // PC, PlayStation, Xbox
+  createdAt DateTime  @default(now())
+
+  // 关联关系
+  code ShiftCode @relation(fields: [codeId], references: [id], onDelete: Cascade)
+
+  @@unique([codeId, platform])
+  @@map("code_platforms")
+}
+
+// 用户收藏表
+model Favorite {
+  id        String    @id @default(cuid())
+  userId    String
+  codeId    String
+  createdAt DateTime  @default(now())
+
+  // 关联关系
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shiftCode ShiftCode @relation(fields: [codeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, codeId])
+  @@map("favorites")
+}
+
+// 代码事件表（复制、查看等）
+model CodeEvent {
+  id        String    @id @default(cuid())
+  codeId    String
+  userId    String?
+  eventType String    // copy, view, favorite, unfavorite, report
+  metadata  String    @default("{}") // JSON string
+  createdAt DateTime  @default(now())
+
+  // 关联关系
+  code ShiftCode @relation(fields: [codeId], references: [id], onDelete: Cascade)
+  user User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("code_events")
+}
+
+// 代码报告表
+model CodeReport {
+  id           String    @id @default(cuid())
+  codeId       String
+  reportedBy   String
+  reason       String    // expired, invalid, duplicate, inappropriate, spam, other
+  description  String?
+  contactEmail String?
+  status       String    @default("pending") // pending, reviewed, resolved, rejected
+  createdAt    DateTime  @default(now())
+
+  // 关联关系
+  code     ShiftCode @relation(fields: [codeId], references: [id], onDelete: Cascade)
+  reporter User      @relation(fields: [reportedBy], references: [id], onDelete: Cascade)
+
+  @@map("code_reports")
+}
+
+// 用户活动日志
+model UserActivity {
+  id        String    @id @default(cuid())
+  userId    String
+  action    String    // register, login, profile_updated, password_changed, etc.
+  metadata  String    @default("{}") // JSON string
+  createdAt DateTime  @default(now())
+
+  // 关联关系
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_activities")
+}
+
+// 系统日志表
+model SystemLog {
+  id        String    @id @default(cuid())
+  level     String    // info, warn, error
+  message   String
+  source    String?   // reddit_monitor, auth_service, etc.
+  metadata  String    @default("{}") // JSON string
+  createdAt DateTime  @default(now())
+
+  @@map("system_logs")
+}
+
+// 管理员操作日志
+model AdminLog {
+  id           String    @id @default(cuid())
+  adminId      String
+  action       String    // create_code, update_code, delete_code, ban_user, etc.
+  resourceType String?   // shiftCode, user, system
+  resourceId   String?
+  metadata     String    @default("{}") // JSON string
+  createdAt    DateTime  @default(now())
+
+  @@map("admin_logs")
+}
+
+// 代码投票表 (点赞/踩)
+model CodeVote {
+  id        String    @id @default(cuid())
+  codeId    String
+  userId    String?   // 可选,支持匿名投票
+  voteType  String    // upvote, downvote
+  ipAddress String?   // 用于防止匿名刷票
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // 关联关系
+  code ShiftCode @relation(fields: [codeId], references: [id], onDelete: Cascade)
+
+  @@index([codeId, ipAddress]) // 用于匿名投票限制
+  @@map("code_votes")
+}

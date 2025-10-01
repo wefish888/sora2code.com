@@ -1,0 +1,212 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import CodeList from '../components/islands/CodeList';
+import StatsDisplay from '../components/islands/StatsDisplay';
+---
+
+<BaseLayout title="Sora2Code.com - Latest Sora2 Invite Codes">
+  <!-- Hero Section with Gradient Background -->
+  <div class="relative overflow-hidden bg-gradient-to-br from-purple-600 via-pink-500 to-blue-600 dark:from-purple-900 dark:via-pink-900 dark:to-blue-900">
+    <!-- Animated Background Pattern -->
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute inset-0" style="background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.2) 2%, transparent 0%), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.2) 2%, transparent 0%); background-size: 60px 60px;"></div>
+    </div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      <!-- Page title and description -->
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-6">
+          <span class="relative flex h-3 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+          </span>
+          <span class="text-white text-sm font-medium">Live Updates • Real-time Collection</span>
+        </div>
+
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight">
+          Sora2 Invite Codes
+          <span class="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-pink-200">
+            Get Sora2 Access Now
+          </span>
+        </h1>
+
+        <p class="text-xl sm:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed">
+          Real-time updated Sora invite codes from Reddit & Twitter.
+          <span class="font-semibold">Access OpenAI's video generation platform</span> instantly.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+          <a href="#codes" class="inline-flex items-center justify-center px-8 py-4 bg-white text-purple-600 font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+            Browse Codes
+          </a>
+          <a href="/guide" class="inline-flex items-center justify-center px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-bold rounded-xl border-2 border-white/30 hover:bg-white/20 transition-all duration-200">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>
+            How to Use
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wave Divider -->
+    <div class="absolute bottom-0 left-0 right-0">
+      <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
+        <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="currentColor" class="text-gray-50 dark:text-gray-900"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Statistics with Modern Cards -->
+    <div class="mb-16">
+      <StatsDisplay client:load />
+    </div>
+
+    <!-- Code list section -->
+    <div id="codes" class="scroll-mt-20">
+      <CodeList client:load />
+    </div>
+
+    <!-- How it Works Section with Visual Steps -->
+    <div class="mt-20 mb-16">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          How to Get Sora2 Access
+        </h2>
+        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          Follow these simple steps to unlock OpenAI's video generation platform
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <!-- Step 1 -->
+        <div class="relative group">
+          <div class="absolute inset-0 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+          <div class="relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+            <div class="bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-2xl w-16 h-16 flex items-center justify-center mx-auto mb-6 text-2xl font-bold shadow-lg">
+              1
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 text-center">
+              📋 Copy Code
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 text-center leading-relaxed">
+              Click the copy button on any invite code below. The code will be instantly copied to your clipboard.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="relative group">
+          <div class="absolute inset-0 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+          <div class="relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+            <div class="bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-2xl w-16 h-16 flex items-center justify-center mx-auto mb-6 text-2xl font-bold shadow-lg">
+              2
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 text-center">
+              🌐 Visit OpenAI
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 text-center leading-relaxed">
+              Go to OpenAI's Sora platform at sora.openai.com and sign in or create your account.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="relative group">
+          <div class="absolute inset-0 bg-gradient-to-br from-green-400 to-emerald-400 rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+          <div class="relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+            <div class="bg-gradient-to-br from-green-500 to-emerald-500 text-white rounded-2xl w-16 h-16 flex items-center justify-center mx-auto mb-6 text-2xl font-bold shadow-lg">
+              3
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 text-center">
+              ✨ Start Creating
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 text-center leading-relaxed">
+              Paste the invite code and activate your access. Begin generating amazing AI videos instantly!
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sora Guide Banner with Modern Design -->
+    <div class="relative overflow-hidden rounded-3xl mb-16">
+      <div class="absolute inset-0 bg-gradient-to-br from-purple-600 via-pink-600 to-blue-600 opacity-90"></div>
+      <div class="absolute inset-0 opacity-20">
+        <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;%3E%3Cg fill=&quot;%23ffffff&quot; fill-opacity=&quot;0.4&quot;%3E%3Cpath d=&quot;M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z&quot;/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+      </div>
+
+      <div class="relative px-8 sm:px-12 py-12 sm:py-16 text-center">
+        <div class="max-w-3xl mx-auto">
+          <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
+            <span class="text-yellow-300 text-2xl">🎬</span>
+            <span class="text-white font-semibold">Video Generation Guide</span>
+          </div>
+
+          <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">
+            Master Sora2 Video Creation
+          </h2>
+          <p class="text-xl text-white/90 mb-8 leading-relaxed">
+            Comprehensive tutorials covering prompt engineering, best practices, and advanced AI video generation techniques.
+          </p>
+
+          <a href="/guide" class="inline-flex items-center px-8 py-4 bg-white text-purple-600 font-bold rounded-xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-200 text-lg">
+            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+            Explore Guides
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature Highlights -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+      <div class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-6 border border-purple-100 dark:border-purple-800">
+        <div class="text-3xl mb-3">⚡</div>
+        <h3 class="font-bold text-gray-900 dark:text-white mb-2">Real-time Updates</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Codes updated every minute from Reddit & Twitter</p>
+      </div>
+
+      <div class="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-2xl p-6 border border-blue-100 dark:border-blue-800">
+        <div class="text-3xl mb-3">✅</div>
+        <h3 class="font-bold text-gray-900 dark:text-white mb-2">Verified Codes</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400">All codes verified by our automated system</p>
+      </div>
+
+      <div class="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-6 border border-green-100 dark:border-green-800">
+        <div class="text-3xl mb-3">🆓</div>
+        <h3 class="font-bold text-gray-900 dark:text-white mb-2">100% Free</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400">No registration, no payments, completely free</p>
+      </div>
+
+      <div class="bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-2xl p-6 border border-orange-100 dark:border-orange-800">
+        <div class="text-3xl mb-3">🌍</div>
+        <h3 class="font-bold text-gray-900 dark:text-white mb-2">Universal Access</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Works on all devices and platforms</p>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom animations */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+</style>
