@@ -1,0 +1,115 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+---
+
+<BaseLayout title="Test Tip Modal - Sora2Code">
+  <div class="container mx-auto px-4 py-16">
+    <div class="max-w-2xl mx-auto">
+      <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4 text-center">
+        🧪 Tip Modal Test Page
+      </h1>
+      <p class="text-gray-600 dark:text-gray-400 text-center mb-8">
+        Click the button below to test the tip modal functionality
+      </p>
+
+      <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-8">
+        <div class="text-center mb-6">
+          <div class="font-mono text-2xl font-bold text-purple-600 dark:text-purple-400 mb-4">
+            ABC***
+          </div>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
+            Sample invite code (masked)
+          </p>
+        </div>
+
+        <button
+          id="testButton"
+          class="w-full py-3 px-6 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors"
+        >
+          📋 Copy Full Code (Test Modal)
+        </button>
+      </div>
+
+      <div class="mt-8 p-4 bg-blue-50 dark:bg-blue-900 rounded-lg">
+        <h3 class="font-semibold text-blue-900 dark:text-blue-100 mb-2">
+          ℹ️ Test Instructions:
+        </h3>
+        <ul class="text-sm text-blue-800 dark:text-blue-200 space-y-1">
+          <li>1. Click the button above</li>
+          <li>2. Wait for the 10-second countdown</li>
+          <li>3. Try switching between different cryptocurrencies</li>
+          <li>4. Test the "Copy Address" button</li>
+          <li>5. Click "Skip" after countdown ends</li>
+          <li>6. Check your clipboard - should contain "ABC123"</li>
+        </ul>
+      </div>
+
+      <div class="mt-8 p-4 bg-yellow-50 dark:bg-yellow-900 rounded-lg">
+        <h3 class="font-semibold text-yellow-900 dark:text-yellow-100 mb-2">
+          ⚠️ Remember to Update:
+        </h3>
+        <ul class="text-sm text-yellow-800 dark:text-yellow-200 space-y-1">
+          <li>• Replace wallet addresses in <code class="bg-yellow-100 dark:bg-yellow-800 px-1 rounded">TipModal.tsx</code></li>
+          <li>• Adjust countdown duration if needed</li>
+          <li>• Customize suggested amounts</li>
+          <li>• Add analytics tracking (optional)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import the modal component -->
+  <div id="modalRoot"></div>
+</BaseLayout>
+
+<script>
+  import { createRoot } from 'react-dom/client';
+  import { createElement } from 'react';
+  import TipModal from '../components/islands/TipModal';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const button = document.getElementById('testButton');
+    const modalRoot = document.getElementById('modalRoot');
+
+    if (!button || !modalRoot) return;
+
+    let isModalOpen = false;
+
+    // Create React root
+    const root = createRoot(modalRoot);
+
+    const updateModal = (isOpen: boolean) => {
+      isModalOpen = isOpen;
+      root.render(
+        createElement(TipModal, {
+          isOpen: isOpen,
+          onClose: () => updateModal(false),
+          onConfirm: async () => {
+            try {
+              await navigator.clipboard.writeText('ABC123');
+              console.log('✅ Code copied to clipboard: ABC123');
+              alert('✅ Test successful! Code "ABC123" copied to clipboard.');
+            } catch (error) {
+              console.error('❌ Failed to copy:', error);
+              alert('❌ Clipboard access denied. Please check browser permissions.');
+            }
+          },
+          code: 'ABC123'
+        })
+      );
+    };
+
+    button.addEventListener('click', () => {
+      updateModal(true);
+    });
+
+    // Initial render (closed state)
+    updateModal(false);
+  });
+</script>
+
+<style>
+  code {
+    font-family: 'Courier New', monospace;
+  }
+</style>

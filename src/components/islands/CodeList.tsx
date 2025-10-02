@@ -3,30 +3,34 @@ import { useStore } from '@nanostores/react';
 import { $codes, $filteredCodes, $loading, $error, $filters, fetchCodes, copyCode, updateFilters } from '../../lib/stores/codes';
 import type { ShiftCode } from '../../types/api';
 import CodeVoteButton from './CodeVoteButton';
+import TipModal from './TipModal';
 
 // React version of CodeCard component
 function CodeCardComponent({ code }: { code: ShiftCode }) {
   const [copied, setCopied] = useState(false);
   const [copying, setCopying] = useState(false);
+  const [showTipModal, setShowTipModal] = useState(false);
 
   // Mask code: show first 3 chars + ***
   const maskedCode = code.code.length >= 6
     ? code.code.substring(0, 3) + '***'
     : code.code;
 
-  const handleCopy = async () => {
-    if (copying) return;
+  const handleCopyClick = () => {
+    // Show tip modal instead of copying immediately
+    setShowTipModal(true);
+  };
 
+  const handleConfirmCopy = async () => {
     setCopying(true);
     try {
-      // First: copy to clipboard
+      // Copy to clipboard
       await navigator.clipboard.writeText(code.code);
       setCopied(true);
 
-      // Then: send API request asynchronously (don't await)
+      // Send API request asynchronously
       copyCode(code.id).catch(error => {
         console.warn('Failed to record copy event:', error);
-        // Don't affect user experience
       });
 
       setTimeout(() => setCopied(false), 2000);
@@ -54,9 +58,17 @@ function CodeCardComponent({ code }: { code: ShiftCode }) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-shadow">
-      {/* Header */}
-      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+    <>
+      <TipModal
+        isOpen={showTipModal}
+        onClose={() => setShowTipModal(false)}
+        onConfirm={handleConfirmCopy}
+        code={code.code}
+      />
+
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-shadow">
+        {/* Header */}
+        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-sm font-mono">
@@ -103,7 +115,7 @@ function CodeCardComponent({ code }: { code: ShiftCode }) {
 
         {/* Copy Button */}
         <button
-          onClick={handleCopy}
+          onClick={handleCopyClick}
           disabled={isExpired || copying}
           className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
             isExpired
@@ -125,7 +137,8 @@ function CodeCardComponent({ code }: { code: ShiftCode }) {
           Source: {isReddit ? 'Reddit Community' : 'Official'}
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 }
 
