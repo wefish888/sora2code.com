@@ -10,16 +10,13 @@ interface TipModalProps {
 // 只保留 USDT (TRC20)
 const USDT_ADDRESS = 'TAXDmEbSofko7u1eKXDR6orLQ1SVqgqRdh';
 
-// 生成二维码 URL (使用免费 API)
-const generateQRCode = (address: string) => {
-  return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(address)}`;
-};
+// 使用本地二维码图片
+const QR_CODE_IMAGE = '/img/u.jpg';
 
 export default function TipModal({ isOpen, onClose, onConfirm, code }: TipModalProps) {
   const [countdown, setCountdown] = useState(10);
   const [canSkip, setCanSkip] = useState(false);
   const [copiedAddress, setCopiedAddress] = useState(false);
-  const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
 
   useEffect(() => {
     if (!isOpen) {
@@ -28,9 +25,6 @@ export default function TipModal({ isOpen, onClose, onConfirm, code }: TipModalP
       setCopiedAddress(false);
       return;
     }
-
-    // 生成二维码
-    setQrCodeUrl(generateQRCode(USDT_ADDRESS));
 
     const timer = setInterval(() => {
       setCountdown((prev) => {
@@ -114,22 +108,17 @@ export default function TipModal({ isOpen, onClose, onConfirm, code }: TipModalP
             {/* QR Code */}
             <div className="flex justify-center mb-4">
               <div className="bg-white p-4 rounded-xl shadow-lg border-4 border-green-500">
-                {qrCodeUrl ? (
-                  <img
-                    src={qrCodeUrl}
-                    alt="USDT TRC20 QR Code"
-                    className="w-48 h-48"
-                    onError={(e) => {
-                      // Fallback if QR code fails to load
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                    }}
-                  />
-                ) : (
-                  <div className="w-48 h-48 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-lg flex items-center justify-center">
-                    <span className="text-gray-400">Loading QR...</span>
-                  </div>
-                )}
+                <img
+                  src={QR_CODE_IMAGE}
+                  alt="USDT TRC20 QR Code"
+                  className="w-48 h-48 object-contain"
+                  onError={(e) => {
+                    // Fallback if QR code fails to load
+                    const target = e.target as HTMLImageElement;
+                    target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2YzZjRmNiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5RUiBDb2RlPC90ZXh0Pjwvc3ZnPg==';
+                    target.className = 'w-48 h-48 object-contain opacity-50';
+                  }}
+                />
               </div>
             </div>
 
