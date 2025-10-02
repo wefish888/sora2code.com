@@ -8,6 +8,11 @@ interface Props {
 
 const { code } = Astro.props;
 
+// Mask code: show first 3 chars + ***
+const maskedCode = code.code.length >= 6
+  ? code.code.substring(0, 3) + '***'
+  : code.code;
+
 // Calculate remaining time (server-side)
 const now = new Date();
 const expiresAt = code.expiresAt ? new Date(code.expiresAt) : null;
@@ -74,7 +79,7 @@ function getPlatformName(platform: string): string {
   <div class="flex items-start justify-between mb-4">
     <div class="flex-1">
       <div class="font-mono text-lg font-bold text-primary-600 dark:text-primary-400 mb-2 break-all">
-        {code.code}
+        {maskedCode}
       </div>
       <div class="flex items-center gap-2">
         <span class={`platform-tag ${getStatusClass(code.status)}`}>

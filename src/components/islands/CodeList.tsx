@@ -7,15 +7,33 @@ import CodeVoteButton from './CodeVoteButton';
 // React version of CodeCard component
 function CodeCardComponent({ code }: { code: ShiftCode }) {
   const [copied, setCopied] = useState(false);
+  const [copying, setCopying] = useState(false);
+
+  // Mask code: show first 3 chars + ***
+  const maskedCode = code.code.length >= 6
+    ? code.code.substring(0, 3) + '***'
+    : code.code;
 
   const handleCopy = async () => {
+    if (copying) return;
+
+    setCopying(true);
     try {
+      // First: copy to clipboard
       await navigator.clipboard.writeText(code.code);
-      await copyCode(code.id);
       setCopied(true);
+
+      // Then: send API request asynchronously (don't await)
+      copyCode(code.id).catch(error => {
+        console.warn('Failed to record copy event:', error);
+        // Don't affect user experience
+      });
+
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
       console.error('Failed to copy code:', error);
+    } finally {
+      setCopying(false);
     }
   };
 
@@ -29,7 +47,7 @@ function CodeCardComponent({ code }: { code: ShiftCode }) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-sm font-mono">
-              {code.code}
+              {maskedCode}
             </code>
             {isReddit && (
               <span className="bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200 px-2 py-1 rounded-full text-xs font-medium">
@@ -73,16 +91,18 @@ function CodeCardComponent({ code }: { code: ShiftCode }) {
         {/* Copy Button */}
         <button
           onClick={handleCopy}
-          disabled={isExpired}
+          disabled={isExpired || copying}
           className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
             isExpired
               ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : copied
-                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                : 'bg-purple-600 hover:bg-purple-700 text-white'
+              : copying
+                ? 'bg-blue-400 text-white cursor-wait'
+                : copied
+                  ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                  : 'bg-purple-600 hover:bg-purple-700 text-white'
           }`}
         >
-          {copied ? '✅ Copied' : '📋 Copy Code'}
+          {copying ? '⏳ Copying...' : copied ? '✅ Copied!' : '📋 Copy Full Code'}
         </button>
       </div>
 
