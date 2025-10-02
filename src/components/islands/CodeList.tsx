@@ -40,6 +40,19 @@ function CodeCardComponent({ code }: { code: ShiftCode }) {
   const isExpired = !!(code.expiresAt && new Date(code.expiresAt) < new Date());
   const isReddit = (code.sourceUrl && code.sourceUrl.includes('reddit')) || code.source === 'reddit';
 
+  // Format relative time
+  const formatRelativeTime = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    if (diffInSeconds < 60) return 'Just now';
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+    return date.toLocaleDateString();
+  };
+
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-shadow">
       {/* Header */}
@@ -76,7 +89,7 @@ function CodeCardComponent({ code }: { code: ShiftCode }) {
         {/* Stats */}
         <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
           <span>📋 {code.copyCount || 0} copies</span>
-          <span>👁️ {code.viewCount || 0} views</span>
+          <span>🕐 {formatRelativeTime(code.createdAt)}</span>
         </div>
 
         {/* Vote and Copy Buttons */}
@@ -203,30 +216,21 @@ export default function CodeList() {
 
   return (
     <div className="mb-8">
-      {/* Search and Refresh Bar */}
+      {/* Search Bar */}
       <div className="bg-white dark:bg-gray-800 rounded-lg p-4 mb-6 border border-gray-200 dark:border-gray-700">
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex-1 relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-            <input
-              type="text"
-              placeholder="Search invite codes..."
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-            />
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
           </div>
-          <button
-            onClick={handleRefresh}
-            disabled={loading}
-            className="px-6 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 whitespace-nowrap"
-          >
-            {loading ? '⏳ Loading...' : '🔄 Refresh'}
-          </button>
+          <input
+            type="text"
+            placeholder="Search invite codes..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          />
         </div>
         {searchInput && (
           <div className="mt-3 flex items-center gap-2">

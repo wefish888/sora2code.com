@@ -72,6 +72,18 @@ function getPlatformName(platform: string): string {
     default: return platform.toUpperCase();
   }
 }
+
+// Format relative time
+function formatRelativeTime(dateString: string): string {
+  const date = new Date(dateString);
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  if (diffInSeconds < 60) return 'Just now';
+  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+  if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+  return date.toLocaleDateString();
+}
 ---
 
 <div class={`code-card p-6 ${isExpired ? 'opacity-60 grayscale' : ''} animate-slide-up`}>
@@ -144,8 +156,8 @@ function getPlatformName(platform: string): string {
   <!-- Statistics -->
   <div class="mb-4 text-xs text-gray-500 dark:text-gray-400">
     <div class="flex items-center gap-4">
-      <span>👁️ {code.viewCount} views</span>
       <span>📋 {code.copyCount} copies</span>
+      <span>🕐 {formatRelativeTime(code.createdAt)}</span>
       {code.invalidReports > 0 && (
         <span class="text-red-500">⚠️ {code.invalidReports} reports</span>
       )}
