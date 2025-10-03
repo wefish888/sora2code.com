@@ -2,12 +2,12 @@
 import BaseLayout from '../../components/layout/BaseLayout.astro';
 import { aboutContent } from '../../i18n/content/about';
 
-const content = aboutContent.zh;
+const content = aboutContent.ko;
 ---
 
 <BaseLayout
-  title="关于我们 - Sora2Code"
-  description="了解Sora2Code.com，您值得信赖的最新Sora邀请码和指南来源。"
+  title="소개 - Sora2Code"
+  description="최신 Sora 초대 코드와 가이드를 제공하는 신뢰할 수 있는 출처인 Sora2Code.com에 대해 알아보세요."
 >
 	<!-- Hero Section -->
 	<div class="relative overflow-hidden bg-gradient-to-br from-purple-600 via-pink-500 to-blue-600 dark:from-purple-900 dark:via-pink-900 dark:to-blue-900 pb-20">
@@ -115,17 +115,17 @@ const content = aboutContent.zh;
 			<div class="grid md:grid-cols-3 gap-6">
 				<div class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-6 text-center border border-purple-100 dark:border-purple-800">
 					<div class="text-4xl mb-4">🌐</div>
-					<h3 class="font-bold text-gray-900 dark:text-white mb-2">前端</h3>
+					<h3 class="font-bold text-gray-900 dark:text-white mb-2">프론트엔드</h3>
 					<p class="text-sm text-gray-600 dark:text-gray-400">{content.techStack.frontend}</p>
 				</div>
 				<div class="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-2xl p-6 text-center border border-blue-100 dark:border-blue-800">
 					<div class="text-4xl mb-4">⚙️</div>
-					<h3 class="font-bold text-gray-900 dark:text-white mb-2">后端</h3>
+					<h3 class="font-bold text-gray-900 dark:text-white mb-2">백엔드</h3>
 					<p class="text-sm text-gray-600 dark:text-gray-400">{content.techStack.backend}</p>
 				</div>
 				<div class="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-6 text-center border border-green-100 dark:border-green-800">
 					<div class="text-4xl mb-4">🗄️</div>
-					<h3 class="font-bold text-gray-900 dark:text-white mb-2">数据存储</h3>
+					<h3 class="font-bold text-gray-900 dark:text-white mb-2">데이터 저장소</h3>
 					<p class="text-sm text-gray-600 dark:text-gray-400">{content.techStack.database}</p>
 				</div>
 			</div>

@@ -17,7 +17,7 @@ backend/nul
 # .env.local
 # .env.production
 # .env.development
-
+nul
 # MacOS
 .DS_Store
 

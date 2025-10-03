@@ -15,7 +15,7 @@ export default defineConfig({
   }),
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'zh'],
+    locales: ['en', 'zh', 'ja', 'ko'],
     routing: {
       prefixDefaultLocale: false
     }
@@ -29,7 +29,7 @@ export default defineConfig({
     tailwind(),
     react(),
     sitemap({
-      filter: (page) => !page.includes('/admin') && !page.includes('/api'),
+      filter: (page) => !page.includes('/admin') && !page.includes('/api') && !page.includes('/test-'),
       changefreq: 'daily',
       priority: 0.7,
       lastmod: new Date()

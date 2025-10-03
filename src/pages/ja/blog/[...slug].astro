@@ -1,0 +1,199 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../components/layout/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const blogPosts = await getCollection('blog');
+  // Only generate paths for Japanese blog posts
+  const jaPosts = blogPosts.filter(post => post.slug.startsWith('ja/'));
+  return jaPosts.map((post) => ({
+    // Remove 'ja/' prefix from slug since we're already in /ja/blog/ route
+    params: { slug: post.slug.replace(/^ja\//, '') },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+// Get related posts (same category, Japanese posts only)
+const allPosts = await getCollection('blog');
+const jaPosts = allPosts.filter(p => p.slug.startsWith('ja/'));
+const relatedPosts = jaPosts
+  .filter(p => p.slug !== post.slug && p.data.category === post.data.category)
+  .slice(0, 3);
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": post.data.title,
+  "description": post.data.description,
+  "author": {
+    "@type": "Organization",
+    "name": "sora2 code"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "sora2 code"
+  },
+  "datePublished": post.data.pubDate.toISOString(),
+  "dateModified": post.data.updatedDate?.toISOString() || post.data.pubDate.toISOString(),
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": `https://sora2code.com/blog/${post.slug}`
+  }
+};
+---
+
+<BaseLayout title={`${post.data.title} | sora2 code`} description={post.data.description}>
+  <Fragment slot="head">
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content={`https://sora2code.com/blog/${post.slug}`}>
+    <meta property="og:title" content={post.data.title}>
+    <meta property="og:description" content={post.data.description}>
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content={`https://sora2code.com/blog/${post.slug}`}>
+    <meta property="twitter:title" content={post.data.title}>
+    <meta property="twitter:description" content={post.data.description}>
+
+    <!-- Keywords -->
+    {post.data.tags && (
+        <meta name="keywords" content={post.data.tags.join(', ')}>
+    )}
+
+    <!-- Structured Data -->
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <style>
+        .prose h1 { @apply text-3xl font-bold text-gray-900 dark:text-white mb-6 mt-8; }
+        .prose h2 { @apply text-2xl font-bold text-primary-600 dark:text-primary-400 mb-4 mt-8; }
+        .prose h3 { @apply text-xl font-bold text-gray-900 dark:text-white mb-3 mt-6; }
+        .prose h4 { @apply text-lg font-bold text-gray-900 dark:text-white mb-2 mt-4; }
+        .prose p { @apply text-gray-600 dark:text-gray-300 leading-relaxed mb-4; }
+        .prose ul, .prose ol { @apply text-gray-600 dark:text-gray-300 mb-4 pl-6; }
+        .prose li { @apply mb-2; }
+        .prose ul li { @apply list-disc; }
+        .prose ol li { @apply list-decimal; }
+        .prose strong { @apply text-gray-900 dark:text-white font-bold; }
+        .prose em { @apply italic; }
+        .prose code { @apply bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-primary-600 dark:text-primary-400 font-mono text-sm; }
+        .prose pre { @apply bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4; }
+        .prose pre code { @apply bg-transparent px-0 py-0; }
+        .prose blockquote { @apply border-l-4 border-primary-600 pl-4 italic text-gray-500 dark:text-gray-400 mb-4; }
+        .prose a { @apply text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 underline; }
+        .prose img { @apply w-full h-auto rounded-lg my-6 shadow-lg; }
+        .prose table { @apply w-full border-collapse border border-gray-300 dark:border-gray-600 mb-4; }
+        .prose th, .prose td { @apply border border-gray-300 dark:border-gray-600 px-4 py-2 text-left; }
+        .prose th { @apply bg-gray-50 dark:bg-gray-800 font-bold; }
+        .prose hr { @apply my-8 border-gray-300 dark:border-gray-700; }
+
+        /* Ensure first h1 doesn't have top margin */
+        .prose > h1:first-child { @apply mt-0; }
+
+        /* Better spacing for nested lists */
+        .prose ul ul, .prose ol ol, .prose ul ol, .prose ol ul { @apply mt-2; }
+    </style>
+  </Fragment>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Breadcrumbs -->
+    <nav class="text-sm mb-8">
+      <ol class="flex items-center space-x-2">
+        <li><a href="/ja" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">首页</a></li>
+        <li class="text-gray-400 dark:text-gray-500">/</li>
+        <li><a href="/ja/blog" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">博客</a></li>
+        <li class="text-gray-400 dark:text-gray-500">/</li>
+        <li class="text-gray-600 dark:text-gray-300 capitalize">{post.data.category}</li>
+        <li class="text-gray-400 dark:text-gray-500">/</li>
+        <li class="text-gray-600 dark:text-gray-300 truncate">{post.data.title}</li>
+      </ol>
+    </nav>
+
+    <article class="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div class="p-8">
+        <!-- Article Header -->
+        <header class="mb-8">
+          <div class="flex items-center space-x-4 mb-4">
+            <span class="bg-primary-600 text-white px-3 py-1 rounded-full text-sm font-semibold capitalize">
+              {post.data.category}
+            </span>
+            <time class="text-gray-500 dark:text-gray-400">
+              Published: {post.data.pubDate.toLocaleDateString()}
+            </time>
+            {post.data.updatedDate && (
+              <time class="text-gray-500 dark:text-gray-400">
+                Updated: {post.data.updatedDate.toLocaleDateString()}
+              </time>
+            )}
+          </div>
+
+          <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            {post.data.title}
+          </h1>
+
+          <p class="text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
+            {post.data.description}
+          </p>
+
+          {post.data.tags && (
+            <div class="flex flex-wrap gap-2">
+              {post.data.tags.map((tag) => (
+                <span class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full text-sm">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          )}
+        </header>
+
+        <!-- Article Content -->
+        <div class="prose prose-lg max-w-none">
+          <Content />
+        </div>
+
+        <!-- Article Footer -->
+        <footer class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+          <div class="text-center">
+            <p class="text-gray-600 dark:text-gray-400">
+              这篇文章对您有帮助吗?与其他 Sora 用户分享吧!
+            </p>
+          </div>
+        </footer>
+      </div>
+    </article>
+
+    <!-- Related Articles -->
+    {relatedPosts.length > 0 && (
+      <section class="mt-16">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">相关文章</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {relatedPosts.map((relatedPost) => (
+            <article class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700">
+              <div class="p-6">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="bg-primary-600 text-white px-2 py-1 rounded text-xs font-semibold capitalize">
+                    {relatedPost.data.category}
+                  </span>
+                  <time class="text-gray-500 dark:text-gray-400 text-xs">
+                    {relatedPost.data.pubDate.toLocaleDateString()}
+                  </time>
+                </div>
+                <h3 class="text-lg font-bold mb-3 text-gray-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                  <a href={`/ja/blog/${relatedPost.slug.replace(/^ja\//, '')}`}>
+                    {relatedPost.data.title}
+                  </a>
+                </h3>
+                <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                  {relatedPost.data.description.slice(0, 120)}...
+                </p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+  </div>
+</BaseLayout>

@@ -1,8 +1,8 @@
 ---
-import BaseLayout from '../components/layout/BaseLayout.astro';
-import { privacyContent } from '../i18n/content/privacy';
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import { privacyContent } from '../../i18n/content/privacy';
 
-const content = privacyContent.en;
+const content = privacyContent.ja;
 
 // Emoji mapping for sections
 const emojiMap: Record<string, string> = {
@@ -22,8 +22,8 @@ const emojiMap: Record<string, string> = {
 ---
 
 <BaseLayout
-  title="Privacy Policy - sora2code"
-  description="Privacy Policy for Sora2Code.com. Learn how we protect your data and respect your privacy."
+  title="プライバシーポリシー - sora2code"
+  description="Sora2Code.comのプライバシーポリシー。データの保護とプライバシーの尊重について学びましょう。"
 >
 	<div class="max-w-4xl mx-auto px-4 py-8">
 		<!-- Page title -->
@@ -95,8 +95,8 @@ const emojiMap: Record<string, string> = {
 
 						{section.contact && (
 							<div class="mt-4">
-								<p class="mb-2">Email: <a href={`mailto:${section.contact.email}`} class="text-purple-400 hover:text-purple-300">{section.contact.email}</a></p>
-								<p class="mb-2">Subject: {section.contact.subject}</p>
+								<p class="mb-2">邮箱: <a href={`mailto:${section.contact.email}`} class="text-purple-400 hover:text-purple-300">{section.contact.email}</a></p>
+								<p class="mb-2">主题: {section.contact.subject}</p>
 								<p class="mb-2">DPO: <a href={`mailto:${section.contact.dpo}`} class="text-purple-400 hover:text-purple-300">{section.contact.dpo}</a></p>
 								{section.note && <p class="text-sm mt-4">{section.note}</p>}
 							</div>

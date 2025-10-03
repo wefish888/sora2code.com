@@ -1,16 +1,17 @@
 ---
-import BaseLayout from '../components/layout/BaseLayout.astro';
-import CodeList from '../components/islands/CodeList';
-import StatsDisplay from '../components/islands/StatsDisplay';
-import { homeContent } from '../i18n/content/home';
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import CodeList from '../../components/islands/CodeList';
+import StatsDisplay from '../../components/islands/StatsDisplay';
+import { t } from '../../i18n';
+import { homeContent } from '../../i18n/content/home';
 
-const locale = 'en';
+const locale = 'ja';
 const content = homeContent[locale];
 ---
 
 <BaseLayout
-  title="Sora2Code.com - Latest Sora2 Invite Codes"
-  description="Get free Sora invite codes updated in real-time from Reddit & Twitter. Access OpenAI's Sora video generation platform instantly."
+  title="Sora2Code.com - 最新のSora2招待コード"
+  description="RedditとTwitterからリアルタイムで更新される無料のSora招待コードを入手。OpenAIのSora動画生成プラットフォームに即座にアクセス。"
 >
   <!-- Hero Section with Gradient Background -->
   <div class="relative overflow-hidden bg-gradient-to-br from-purple-600 via-pink-500 to-blue-600 dark:from-purple-900 dark:via-pink-900 dark:to-blue-900">
@@ -27,19 +28,18 @@ const content = homeContent[locale];
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
             <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
           </span>
-          <span class="text-white text-sm font-medium">Live Updates • Real-time Collection</span>
+          <span class="text-white text-sm font-medium">{t('home.liveUpdates', locale)}</span>
         </div>
 
         <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight">
-          Sora2 Invite Codes
+          {t('home.title', locale)}
           <span class="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-pink-200">
-            Get Sora2 Access Now
+            {t('home.subtitle', locale)}
           </span>
         </h1>
 
         <p class="text-xl sm:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-          Real-time updated Sora invite codes from Reddit & Twitter.
-          <span class="font-semibold">Access OpenAI's video generation platform</span> instantly.
+          {t('home.description', locale)}
         </p>
 
         <!-- CTA Buttons -->
@@ -48,13 +48,13 @@ const content = homeContent[locale];
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
             </svg>
-            Browse Codes
+            {t('home.browseCodes', locale)}
           </a>
-          <a href="/guide" class="inline-flex items-center justify-center px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-bold rounded-xl border-2 border-white/30 hover:bg-white/20 transition-all duration-200">
+          <a href="/ja/guide" class="inline-flex items-center justify-center px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-bold rounded-xl border-2 border-white/30 hover:bg-white/20 transition-all duration-200">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
             </svg>
-            How to Use
+            {t('home.howToUse', locale)}
           </a>
         </div>
       </div>
@@ -162,7 +162,7 @@ const content = homeContent[locale];
             {content.guideBanner.description}
           </p>
 
-          <a href="/guide" class="inline-flex items-center px-8 py-4 bg-white text-purple-600 font-bold rounded-xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-200 text-lg">
+          <a href="/ja/guide" class="inline-flex items-center px-8 py-4 bg-white text-purple-600 font-bold rounded-xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-200 text-lg">
             <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
             </svg>
