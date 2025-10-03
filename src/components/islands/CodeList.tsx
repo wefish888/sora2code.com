@@ -52,10 +52,10 @@ function CodeCardComponent({ code }: { code: ShiftCode }) {
     const now = new Date();
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-    if (diffInSeconds < 60) return 'Just now';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
-    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+    if (diffInSeconds < 60) return t('codes.justNow');
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} ${t('codes.minutesAgo')}`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} ${t('codes.hoursAgo')}`;
+    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} ${t('codes.daysAgo')}`;
     return date.toLocaleDateString();
   };
 
@@ -89,7 +89,7 @@ function CodeCardComponent({ code }: { code: ShiftCode }) {
                 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                 : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
           }`}>
-            {isExpired ? 'Expired' : code.status === 'active' ? 'Active' : 'Pending'}
+            {isExpired ? t('codes.expired') : code.status === 'active' ? t('codes.active') : t('codes.pending')}
           </div>
         </div>
       </div>
@@ -97,12 +97,12 @@ function CodeCardComponent({ code }: { code: ShiftCode }) {
       {/* Body */}
       <div className="p-4">
         <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-2">
-          {code.reward || 'Sora2 Access'}
+          {code.reward || t('codes.soraAccess')}
         </h3>
 
         {/* Stats */}
         <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
-          <span>📋 {code.copyCount || 0} copies</span>
+          <span>📋 {t('codes.copyCount')} {code.copyCount || 0} {t('codes.times')}</span>
           <span>🕐 {formatRelativeTime(code.createdAt)}</span>
         </div>
 

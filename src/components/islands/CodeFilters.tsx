@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import { useStore } from '@nanostores/react';
 import { $filters, updateFilters, clearFilters, fetchCodes } from '../../lib/stores/codes';
 import type { Platform, CodeStatus, GameVersion } from '../../types/api';
+import { useI18n } from '../../lib/hooks/useI18n';
 
 export default function CodeFilters() {
+  const { t } = useI18n();
   const filters = useStore($filters);
   const [searchInput, setSearchInput] = useState(filters.search);
 
@@ -60,10 +62,10 @@ export default function CodeFilters() {
   ];
 
   const statuses: { value: CodeStatus; label: string; color: string }[] = [
-    { value: 'active', label: 'Active', color: 'text-green-600' },
-    { value: 'expired', label: 'Expired', color: 'text-red-600' },
-    { value: 'invalid', label: 'Invalid', color: 'text-gray-600' },
-    { value: 'pending', label: 'Pending', color: 'text-yellow-600' }
+    { value: 'active', label: t('codes.active'), color: 'text-green-600' },
+    { value: 'expired', label: t('codes.expired'), color: 'text-red-600' },
+    { value: 'invalid', label: t('codes.invalid'), color: 'text-gray-600' },
+    { value: 'pending', label: t('codes.pending'), color: 'text-yellow-600' }
   ];
 
   const gameVersions: { value: GameVersion; label: string }[] = [
@@ -84,7 +86,7 @@ export default function CodeFilters() {
           </div>
           <input
             type="text"
-            placeholder="Search codes, rewards or authors..."
+            placeholder={t('codes.searchPlaceholder')}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
@@ -96,13 +98,13 @@ export default function CodeFilters() {
             onClick={handleRefresh}
             className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
-            🔄 Refresh
+            🔄 {t('codes.refresh')}
           </button>
           <button
             onClick={handleClearFilters}
             className="px-4 py-2 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-300 rounded-lg font-medium transition-colors"
           >
-            Clear Filters
+            {t('codes.clearFilters')}
           </button>
         </div>
       </div>
@@ -112,7 +114,7 @@ export default function CodeFilters() {
         {/* Platform filter */}
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-            Platform
+            {t('codes.platform')}
           </label>
           <div className="space-y-2">
             {platforms.map((platform) => (
@@ -134,7 +136,7 @@ export default function CodeFilters() {
         {/* Status filter */}
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-            Status
+            {t('codes.status')}
           </label>
           <div className="space-y-2">
             {statuses.map((status) => (
@@ -156,7 +158,7 @@ export default function CodeFilters() {
         {/* Game version */}
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-            Game Version
+            {t('codes.gameVersion')}
           </label>
           <select
             value={filters.gameVersion || 'bl4'}
