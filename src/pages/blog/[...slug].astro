@@ -4,7 +4,9 @@ import BaseLayout from '../../components/layout/BaseLayout.astro';
 
 export async function getStaticPaths() {
   const blogPosts = await getCollection('blog');
-  return blogPosts.map((post) => ({
+  // Filter to only show English posts (exclude zh/, ja/, ko/ prefixed posts)
+  const enPosts = blogPosts.filter(post => !post.slug.startsWith('zh/') && !post.slug.startsWith('ja/') && !post.slug.startsWith('ko/'));
+  return enPosts.map((post) => ({
     params: { slug: post.slug },
     props: { post },
   }));
@@ -13,9 +15,10 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await post.render();
 
-// Get related posts (same category)
+// Get related posts (same category, English only)
 const allPosts = await getCollection('blog');
-const relatedPosts = allPosts
+const enPosts = allPosts.filter(p => !p.slug.startsWith('zh/') && !p.slug.startsWith('ja/') && !p.slug.startsWith('ko/'));
+const relatedPosts = enPosts
   .filter(p => p.slug !== post.slug && p.data.category === post.data.category)
   .slice(0, 3);
 

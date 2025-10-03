@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-type Locale = 'en' | 'zh';
+type Locale = 'en' | 'zh' | 'ja' | 'ko';
 
 const translations = {
   en: {
@@ -48,6 +48,52 @@ const translations = {
     'stats.activeCodes': '活跃代码',
     'stats.totalCopies': '总复制次数',
     'stats.autoMonitoring': '自动监控'
+  },
+  ja: {
+    'nav.home': 'ホーム',
+    'nav.blog': 'ブログ',
+    'nav.guide': 'ガイド',
+    'nav.about': '概要',
+    'nav.faq': 'よくある質問',
+    'home.title': 'Sora 招待コード',
+    'home.subtitle': '今すぐSoraアクセスを取得',
+    'home.description': 'RedditとTwitterからリアルタイムで更新されるSora招待コード。OpenAIのビデオ生成プラットフォームに即座にアクセス。',
+    'home.liveUpdates': 'ライブ更新 • リアルタイム収集',
+    'home.browseCodes': 'コードを閲覧',
+    'home.howToUse': '使い方',
+    'codes.latestCodes': '最新の招待コード',
+    'codes.loading': '読み込み中...',
+    'codes.noCodesFound': 'コードが見つかりません',
+    'codes.searchPlaceholder': '招待コードを検索...',
+    'codes.copyCode': '完全なコードをコピー',
+    'codes.copied': 'コピーしました！',
+    'codes.copying': 'コピー中...',
+    'stats.activeCodes': '有効なコード',
+    'stats.totalCopies': '総コピー数',
+    'stats.autoMonitoring': '自動監視'
+  },
+  ko: {
+    'nav.home': '홈',
+    'nav.blog': '블로그',
+    'nav.guide': '가이드',
+    'nav.about': '소개',
+    'nav.faq': '자주 묻는 질문',
+    'home.title': 'Sora 초대 코드',
+    'home.subtitle': '지금 Sora 액세스 권한 받기',
+    'home.description': 'Reddit 및 Twitter에서 실시간으로 업데이트되는 Sora 초대 코드. OpenAI의 비디오 생성 플랫폼에 즉시 액세스하세요.',
+    'home.liveUpdates': '라이브 업데이트 • 실시간 수집',
+    'home.browseCodes': '코드 둘러보기',
+    'home.howToUse': '사용 방법',
+    'codes.latestCodes': '최신 초대 코드',
+    'codes.loading': '로딩 중...',
+    'codes.noCodesFound': '코드를 찾을 수 없습니다',
+    'codes.searchPlaceholder': '초대 코드 검색...',
+    'codes.copyCode': '전체 코드 복사',
+    'codes.copied': '복사됨!',
+    'codes.copying': '복사 중...',
+    'stats.activeCodes': '활성 코드',
+    'stats.totalCopies': '총 복사 수',
+    'stats.autoMonitoring': '자동 모니터링'
   }
 };
 
@@ -57,7 +103,14 @@ export function useI18n() {
   useEffect(() => {
     // Detect locale from URL
     const path = window.location.pathname;
-    const detectedLocale = path.startsWith('/zh') ? 'zh' : 'en';
+    let detectedLocale: Locale = 'en';
+    if (path.startsWith('/zh')) {
+      detectedLocale = 'zh';
+    } else if (path.startsWith('/ja')) {
+      detectedLocale = 'ja';
+    } else if (path.startsWith('/ko')) {
+      detectedLocale = 'ko';
+    }
     setLocale(detectedLocale);
   }, []);
 
