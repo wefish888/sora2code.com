@@ -8,6 +8,14 @@ export const $loading = atom<boolean>(false);
 export const $error = atom<string | null>(null);
 export const $lastUpdated = atom<Date | null>(null);
 
+// Pagination state
+export const $pagination = map({
+  page: 1,
+  limit: 20,
+  total: 0,
+  totalPages: 0
+});
+
 // Filter state
 export const $filters = map<CodeFilters>({
   platforms: [],
@@ -120,13 +128,19 @@ function transformBackendCode(backendCode: BackendShiftCode): ShiftCode {
 }
 
 // Actions
-export async function fetchCodes(): Promise<void> {
+export async function fetchCodes(page?: number): Promise<void> {
   $loading.set(true);
   $error.set(null);
 
   try {
+    const currentPagination = $pagination.get();
+    const requestPage = page || currentPagination.page;
+    const limit = currentPagination.limit;
+
     // Use encrypted API request (encryption is automatic)
-    const data: { success: boolean; data: { codes: BackendShiftCode[]; pagination: any }; count: number } = await apiGet('/api/v1/codes');
+    const data: { success: boolean; data: { codes: BackendShiftCode[]; pagination: any }; count: number } = await apiGet(
+      `/api/v1/codes?page=${requestPage}&limit=${limit}`
+    );
 
     if (!data.success) {
       throw new Error('Failed to fetch codes');
@@ -135,6 +149,17 @@ export async function fetchCodes(): Promise<void> {
     // Transform backend codes to frontend format
     const transformedCodes = data.data.codes.map(transformBackendCode);
     $codes.set(transformedCodes);
+
+    // Update pagination state
+    if (data.data.pagination) {
+      $pagination.set({
+        page: data.data.pagination.page,
+        limit: data.data.pagination.limit,
+        total: data.data.pagination.total,
+        totalPages: data.data.pagination.totalPages
+      });
+    }
+
     $lastUpdated.set(new Date());
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
@@ -142,6 +167,27 @@ export async function fetchCodes(): Promise<void> {
     console.error('Failed to fetch codes:', error);
   } finally {
     $loading.set(false);
+  }
+}
+
+export function setPage(page: number): void {
+  const currentPagination = $pagination.get();
+  if (page >= 1 && page <= currentPagination.totalPages) {
+    fetchCodes(page);
+  }
+}
+
+export function nextPage(): void {
+  const currentPagination = $pagination.get();
+  if (currentPagination.page < currentPagination.totalPages) {
+    setPage(currentPagination.page + 1);
+  }
+}
+
+export function prevPage(): void {
+  const currentPagination = $pagination.get();
+  if (currentPagination.page > 1) {
+    setPage(currentPagination.page - 1);
   }
 }
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useStore } from '@nanostores/react';
-import { $codes, $filteredCodes, $loading, $error, $filters, fetchCodes, copyCode, updateFilters } from '../../lib/stores/codes';
+import { $codes, $filteredCodes, $loading, $error, $filters, $pagination, fetchCodes, copyCode, updateFilters, nextPage, prevPage, setPage } from '../../lib/stores/codes';
 import type { ShiftCode } from '../../types/api';
 import CodeVoteButton from './CodeVoteButton';
 import TipModal from './TipModal';
@@ -151,6 +151,7 @@ export default function CodeList() {
   const loading = useStore($loading);
   const error = useStore($error);
   const filters = useStore($filters);
+  const pagination = useStore($pagination);
   const [searchInput, setSearchInput] = useState(filters.search);
 
   // Fetch data when component mounts
@@ -277,11 +278,78 @@ export default function CodeList() {
 
       {/* Code grid */}
       {filteredCodes.length > 0 ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {filteredCodes.map((code) => (
-            <CodeCardComponent key={code.id} code={code} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            {filteredCodes.map((code) => (
+              <CodeCardComponent key={code.id} code={code} />
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {pagination.totalPages > 1 && (
+            <div className="mt-8 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 pt-6">
+              <div className="text-sm text-gray-700 dark:text-gray-300">
+                {t('codes.page')} {pagination.page} {t('codes.of')} {pagination.totalPages}
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  onClick={prevPage}
+                  disabled={pagination.page === 1}
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                    pagination.page === 1
+                      ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                      : 'bg-purple-600 hover:bg-purple-700 text-white'
+                  }`}
+                >
+                  ← {t('codes.previous')}
+                </button>
+
+                {/* Page numbers */}
+                <div className="hidden sm:flex gap-1">
+                  {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                    let pageNum: number;
+                    if (pagination.totalPages <= 5) {
+                      pageNum = i + 1;
+                    } else if (pagination.page <= 3) {
+                      pageNum = i + 1;
+                    } else if (pagination.page >= pagination.totalPages - 2) {
+                      pageNum = pagination.totalPages - 4 + i;
+                    } else {
+                      pageNum = pagination.page - 2 + i;
+                    }
+
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => setPage(pageNum)}
+                        className={`w-10 h-10 rounded-lg font-medium transition-colors ${
+                          pagination.page === pageNum
+                            ? 'bg-purple-600 text-white'
+                            : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <button
+                  onClick={nextPage}
+                  disabled={pagination.page === pagination.totalPages}
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                    pagination.page === pagination.totalPages
+                      ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                      : 'bg-purple-600 hover:bg-purple-700 text-white'
+                  }`}
+                >
+                  {t('codes.next')} →
+                </button>
+              </div>
+            </div>
+          )}
+        </>
       ) : (
         <div className="text-center py-12">
           <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
