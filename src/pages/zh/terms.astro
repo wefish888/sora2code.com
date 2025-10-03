@@ -1,8 +1,8 @@
 ---
-import BaseLayout from '../components/layout/BaseLayout.astro';
-import { termsContent } from '../i18n/content/terms';
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import { termsContent } from '../../i18n/content/terms';
 
-const content = termsContent.en;
+const content = termsContent.zh;
 
 // Emoji mapping for sections
 const emojiMap: Record<string, string> = {
@@ -20,7 +20,7 @@ const emojiMap: Record<string, string> = {
 };
 ---
 
-<BaseLayout title="Terms of Service - sora2code">
+<BaseLayout title="服务条款 - sora2code">
 	<div class="max-w-4xl mx-auto px-4 py-8">
 		<!-- Page title -->
 		<div class="text-center mb-12">
@@ -67,8 +67,8 @@ const emojiMap: Record<string, string> = {
 
 						{section.contact && (
 							<div class="mt-4">
-								<p class="mb-2">Email: <a href={`mailto:${section.contact.email}`} class="text-purple-400 hover:text-purple-300">{section.contact.email}</a></p>
-								<p>Subject: {section.contact.subject}</p>
+								<p class="mb-2">邮箱: <a href={`mailto:${section.contact.email}`} class="text-purple-400 hover:text-purple-300">{section.contact.email}</a></p>
+								<p>主题: {section.contact.subject}</p>
 							</div>
 						)}
 					</div>

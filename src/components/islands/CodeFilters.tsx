@@ -67,9 +67,9 @@ export default function CodeFilters() {
   ];
 
   const gameVersions: { value: GameVersion; label: string }[] = [
-    { value: 'bl4', label: 'sora2' },
-    { value: 'bl3', label: 'Borderlands 3' },
-    { value: 'wonderlands', label: 'Wonderlands' }
+    { value: 'bl4', label: 'Sora 2' },
+    { value: 'bl3', label: 'Sora' },
+    { value: 'wonderlands', label: 'Sora Legacy' }
   ];
 
   return (

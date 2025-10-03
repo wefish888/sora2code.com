@@ -13,6 +13,13 @@ export default defineConfig({
       enabled: true
     }
   }),
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'zh'],
+    routing: {
+      prefixDefaultLocale: false
+    }
+  },
   image: {
     service: {
       entrypoint: 'astro/assets/services/noop'

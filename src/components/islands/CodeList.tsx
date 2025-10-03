@@ -4,9 +4,11 @@ import { $codes, $filteredCodes, $loading, $error, $filters, fetchCodes, copyCod
 import type { ShiftCode } from '../../types/api';
 import CodeVoteButton from './CodeVoteButton';
 import TipModal from './TipModal';
+import { useI18n } from '../../lib/hooks/useI18n';
 
 // React version of CodeCard component
 function CodeCardComponent({ code }: { code: ShiftCode }) {
+  const { t } = useI18n();
   const [copied, setCopied] = useState(false);
   const [copying, setCopying] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
@@ -127,7 +129,7 @@ function CodeCardComponent({ code }: { code: ShiftCode }) {
                   : 'bg-purple-600 hover:bg-purple-700 text-white'
           }`}
         >
-          {copying ? '⏳ Copying...' : copied ? '✅ Copied!' : '📋 Copy Full Code'}
+          {copying ? `⏳ ${t('codes.copying')}` : copied ? `✅ ${t('codes.copied')}` : `📋 ${t('codes.copyCode')}`}
         </button>
       </div>
 
@@ -143,6 +145,7 @@ function CodeCardComponent({ code }: { code: ShiftCode }) {
 }
 
 export default function CodeList() {
+  const { t } = useI18n();
   const codes = useStore($codes);
   const filteredCodes = useStore($filteredCodes);
   const loading = useStore($loading);
@@ -183,7 +186,7 @@ export default function CodeList() {
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            Loading...
+            {t('codes.loading')}
           </div>
         </div>
         <div className="animate-pulse space-y-4">
@@ -239,7 +242,7 @@ export default function CodeList() {
           </div>
           <input
             type="text"
-            placeholder="Search invite codes..."
+            placeholder={t('codes.searchPlaceholder')}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"

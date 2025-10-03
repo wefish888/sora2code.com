@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { apiGet } from '../../lib/utils/api';
+import { useI18n } from '../../lib/hooks/useI18n';
 
 interface Stats {
   totalCodes: number;
@@ -9,6 +10,7 @@ interface Stats {
 }
 
 export default function StatsDisplay() {
+  const { t } = useI18n();
   const [stats, setStats] = useState<Stats>({
     totalCodes: 0,
     activeCodes: 0,
@@ -44,7 +46,7 @@ export default function StatsDisplay() {
             stats.activeCodes || 0
           )}
         </div>
-        <div className="text-sm text-gray-600 dark:text-gray-400">Active Codes</div>
+        <div className="text-sm text-gray-600 dark:text-gray-400">{t('stats.activeCodes')}</div>
       </div>
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 text-center border border-gray-200 dark:border-gray-700">
         <div className="text-3xl font-bold text-green-600 dark:text-green-400">
@@ -54,11 +56,11 @@ export default function StatsDisplay() {
             stats.totalCopies || 0
           )}
         </div>
-        <div className="text-sm text-gray-600 dark:text-gray-400">Total Copies</div>
+        <div className="text-sm text-gray-600 dark:text-gray-400">{t('stats.totalCopies')}</div>
       </div>
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 text-center border border-gray-200 dark:border-gray-700">
         <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">24/7</div>
-        <div className="text-sm text-gray-600 dark:text-gray-400">Auto Monitoring</div>
+        <div className="text-sm text-gray-600 dark:text-gray-400">{t('stats.autoMonitoring')}</div>
       </div>
     </div>
   );

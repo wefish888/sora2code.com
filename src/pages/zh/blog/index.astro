@@ -1,11 +1,13 @@
 ---
 import { getCollection } from 'astro:content';
-import BaseLayout from '../../components/layout/BaseLayout.astro';
-import { blogContent } from '../../i18n/content/blog';
+import BaseLayout from '../../../components/layout/BaseLayout.astro';
+import { blogContent } from '../../../i18n/content/blog';
 
-const content = blogContent.en;
+const content = blogContent.zh;
 const allPosts = await getCollection('blog');
-const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+// Filter only Chinese blog posts (those in zh/ subdirectory)
+const zhPosts = allPosts.filter(post => post.slug.startsWith('zh/'));
+const sortedPosts = zhPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 // Group posts by category
 const categories = [...new Set(sortedPosts.map(post => post.data.category))];
@@ -19,7 +21,7 @@ const postsByCategory = categories.reduce((acc, category) => {
 const featuredPosts = sortedPosts.filter(post => post.data.featured).slice(0, 6);
 ---
 
-<BaseLayout title="Sora Blog - Complete Blog Collection" description="Comprehensive collection of Sora Blog, tips, video creation strategies, and AI generation techniques. Your ultimate Sora resource.">
+<BaseLayout title="Sora 博客 - 完整博客合集" description="全面的 Sora 博客集、技巧、视频创作策略和 AI 生成技术。您的终极 Sora 资源。">
   <!-- Hero Section -->
   <div class="relative overflow-hidden bg-gradient-to-br from-purple-600 via-pink-500 to-blue-600 dark:from-purple-900 dark:via-pink-900 dark:to-blue-900 pb-20">
     <div class="absolute inset-0 opacity-10">
@@ -101,7 +103,7 @@ const featuredPosts = sortedPosts.filter(post => post.data.featured).slice(0, 6)
                     </time>
                   </div>
                   <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
-                    <a href={`/blog/${post.slug}`}>
+                    <a href={`/zh/blog/${post.slug.replace(/^zh\//, '')}`}>
                       {post.data.title}
                     </a>
                   </h3>
@@ -146,7 +148,7 @@ const featuredPosts = sortedPosts.filter(post => post.data.featured).slice(0, 6)
                   </time>
                 </div>
                 <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                  <a href={`/blog/${post.slug}`}>
+                  <a href={`/zh/blog/${post.slug.replace(/^zh\//, '')}`}>
                     {post.data.title}
                   </a>
                 </h3>
