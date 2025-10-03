@@ -1,12 +1,15 @@
 ---
 import type { ShiftCode } from '../../types/api';
 import CodeCopyButton from '../islands/CodeCopyButton';
+import { codeCardContent } from '../../i18n/content/codeCard';
 
 interface Props {
   code: ShiftCode;
+  lang?: 'en' | 'zh';
 }
 
-const { code } = Astro.props;
+const { code, lang = 'en' } = Astro.props;
+const t = codeCardContent[lang];
 
 // Mask code: show first 3 chars + ***
 const maskedCode = code.code.length >= 6
@@ -26,10 +29,10 @@ function formatTimeRemaining(ms: number): string {
 
   if (hours > 24) {
     const days = Math.floor(hours / 24);
-    return `${days} days ${hours % 24} hours`;
+    return `${days} ${t.time.days} ${hours % 24} ${t.time.hours}`;
   }
 
-  return `${hours} hours ${minutes} minutes`;
+  return `${hours} ${t.time.hours} ${minutes} ${t.time.minutes}`;
 }
 
 // Get platform style class
@@ -55,10 +58,10 @@ function getStatusClass(status: string): string {
 // Get status text
 function getStatusText(status: string): string {
   switch (status) {
-    case 'active': return 'Active';
-    case 'expired': return 'Expired';
-    case 'invalid': return 'Invalid';
-    case 'pending': return 'Pending';
+    case 'active': return t.status.active;
+    case 'expired': return t.status.expired;
+    case 'invalid': return t.status.invalid;
+    case 'pending': return t.status.pending;
     default: return status;
   }
 }
@@ -66,9 +69,10 @@ function getStatusText(status: string): string {
 // Get platform display name
 function getPlatformName(platform: string): string {
   switch (platform) {
-    case 'pc': return 'PC';
-    case 'playstation': return 'PlayStation';
-    case 'xbox': return 'Xbox';
+    case 'pc': return t.platforms.pc;
+    case 'playstation': return t.platforms.playstation;
+    case 'xbox': return t.platforms.xbox;
+    case 'all': return t.platforms.all;
     default: return platform.toUpperCase();
   }
 }
@@ -78,10 +82,10 @@ function formatRelativeTime(dateString: string): string {
   const date = new Date(dateString);
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-  if (diffInSeconds < 60) return 'Just now';
-  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
-  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
-  if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+  if (diffInSeconds < 60) return t.time.justNow;
+  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} ${t.time.minutesAgo}`;
+  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} ${t.time.hoursAgo}`;
+  if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} ${t.time.daysAgo}`;
   return date.toLocaleDateString();
 }
 ---
@@ -99,7 +103,7 @@ function formatRelativeTime(dateString: string): string {
         </span>
         {code.isFeatured && (
           <span class="platform-tag bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
-            ⭐ Featured
+            ⭐ {t.featured}
           </span>
         )}
       </div>
@@ -108,24 +112,24 @@ function formatRelativeTime(dateString: string): string {
     <!-- Source information -->
     {code.sourceAuthor && (
       <div class="text-right text-xs text-gray-500 dark:text-gray-400">
-        <div>Source: {code.sourceAuthor}</div>
-        <div>{new Date(code.createdAt).toLocaleString('en-US')}</div>
+        <div>{t.source}: {code.sourceAuthor}</div>
+        <div>{new Date(code.createdAt).toLocaleString(lang === 'zh' ? 'zh-CN' : 'en-US')}</div>
       </div>
     )}
   </div>
 
   <!-- Reward information -->
   <div class="mb-4">
-    <div class="text-sm text-gray-600 dark:text-gray-400 mb-1">🏆 Reward</div>
+    <div class="text-sm text-gray-600 dark:text-gray-400 mb-1">🏆 {t.reward}</div>
     <div class="font-medium text-gray-900 dark:text-gray-100">
-      {code.reward || 'Unknown Reward'}
+      {code.reward || t.unknownReward}
       {code.rewardQuantity && ` x${code.rewardQuantity}`}
     </div>
   </div>
 
   <!-- Platform tags -->
   <div class="mb-4">
-    <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">📱 Supported Platforms</div>
+    <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">📱 {t.supportedPlatforms}</div>
     <div class="flex flex-wrap gap-1">
       {code.platforms.map((platform) => (
         <span class={`platform-tag ${getPlatformClass(platform)}`}>
@@ -138,7 +142,7 @@ function formatRelativeTime(dateString: string): string {
   <!-- Time information -->
   {timeRemaining && !isExpired && (
     <div class="mb-4">
-      <div class="text-sm text-gray-600 dark:text-gray-400 mb-1">⏰ Time Remaining</div>
+      <div class="text-sm text-gray-600 dark:text-gray-400 mb-1">⏰ {t.timeRemaining}</div>
       <div class="font-mono text-sm text-orange-600 dark:text-orange-400 font-medium">
         {formatTimeRemaining(timeRemaining)}
       </div>
@@ -148,7 +152,7 @@ function formatRelativeTime(dateString: string): string {
   {isExpired && (
     <div class="mb-4">
       <div class="text-sm text-red-600 dark:text-red-400 font-medium">
-        ⚠️ This code has expired
+        ⚠️ {t.expired}
       </div>
     </div>
   )}
@@ -156,10 +160,10 @@ function formatRelativeTime(dateString: string): string {
   <!-- Statistics -->
   <div class="mb-4 text-xs text-gray-500 dark:text-gray-400">
     <div class="flex items-center gap-4">
-      <span>📋 {code.copyCount} copies</span>
+      <span>📋 {code.copyCount} {t.copies}</span>
       <span>🕐 {formatRelativeTime(code.createdAt)}</span>
       {code.invalidReports > 0 && (
-        <span class="text-red-500">⚠️ {code.invalidReports} reports</span>
+        <span class="text-red-500">⚠️ {code.invalidReports} {t.reports}</span>
       )}
     </div>
   </div>
@@ -175,12 +179,12 @@ function formatRelativeTime(dateString: string): string {
 
     <button
       class="btn-secondary text-sm px-3 py-2 flex items-center gap-1"
-      onclick={`reportCode('${code.id}')`}
+      onclick={`reportCode('${code.id}', '${lang}')`}
     >
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
       </svg>
-      Report
+      {t.reportButton}
     </button>
 
     {code.sourceUrl && (
@@ -193,22 +197,25 @@ function formatRelativeTime(dateString: string): string {
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
         </svg>
-        Source
+        {t.sourceButton}
       </a>
     )}
   </div>
 </div>
 
 <script>
+  import { codeCardContent } from '../../i18n/content/codeCard';
+
   // Report code function
   declare global {
     interface Window {
-      reportCode: (codeId: string) => void;
+      reportCode: (codeId: string, lang: string) => void;
     }
   }
 
-  window.reportCode = function(codeId: string) {
-    const reason = prompt('Please enter the reason for reporting:');
+  window.reportCode = function(codeId: string, lang: string = 'en') {
+    const t = codeCardContent[lang as 'en' | 'zh'];
+    const reason = prompt(t.report.promptMessage);
     if (!reason) return;
 
     fetch(`/api/v1/codes/${codeId}/report`, {
@@ -218,13 +225,13 @@ function formatRelativeTime(dateString: string): string {
     })
     .then(response => {
       if (response.ok) {
-        alert('Report submitted, thank you for your feedback!');
+        alert(t.report.successMessage);
       } else {
-        alert('Failed to submit report, please try again later.');
+        alert(t.report.errorMessage);
       }
     })
     .catch(() => {
-      alert('Network error, please try again later.');
+      alert(t.report.networkError);
     });
   };
 </script>
