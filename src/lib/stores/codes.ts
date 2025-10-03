@@ -134,12 +134,15 @@ export async function fetchCodes(page?: number): Promise<void> {
 
   try {
     const currentPagination = $pagination.get();
-    const requestPage = page || currentPagination.page;
+    const requestPage = page || currentPagination.page || 1;
     const limit = currentPagination.limit;
+
+    // Calculate offset from page number
+    const offset = (requestPage - 1) * limit;
 
     // Use encrypted API request (encryption is automatic)
     const data: { success: boolean; data: { codes: BackendShiftCode[]; pagination: any }; count: number } = await apiGet(
-      `/api/v1/codes?page=${requestPage}&limit=${limit}`
+      `/api/v1/codes?offset=${offset}&limit=${limit}`
     );
 
     if (!data.success) {
@@ -152,12 +155,22 @@ export async function fetchCodes(page?: number): Promise<void> {
 
     // Update pagination state
     if (data.data.pagination) {
+      console.log('[Pagination] API response:', data.data.pagination);
+
+      // Calculate page and totalPages from offset
+      const currentPage = Math.floor(data.data.pagination.offset / data.data.pagination.limit) + 1;
+      const totalPages = Math.ceil(data.data.pagination.total / data.data.pagination.limit);
+
       $pagination.set({
-        page: data.data.pagination.page,
+        page: currentPage,
         limit: data.data.pagination.limit,
         total: data.data.pagination.total,
-        totalPages: data.data.pagination.totalPages
+        totalPages: totalPages
       });
+
+      console.log('[Pagination] Calculated:', { currentPage, totalPages });
+    } else {
+      console.warn('[Pagination] No pagination data in API response');
     }
 
     $lastUpdated.set(new Date());
